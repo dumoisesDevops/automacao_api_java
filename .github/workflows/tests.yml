@@ -1,3 +1,5 @@
+name: Build and Test Maven Project
+
 on:
   push:
     branches:
@@ -18,7 +20,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'  # Corrigido para 'temurin', a distribuição do OpenJDK
+          distribution: 'temurin'
 
       - name: Cache Maven dependencies
         uses: actions/cache@v3
@@ -27,24 +29,8 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
       - name: Install dependencies with Maven
-        run: mvn clean install -DskipTests=true  # Baixando as dependências sem rodar os testes ainda
+        run: mvn clean install -DskipTests=true
 
       - name: Run tests with Maven
-        run: mvn test  # Agora rodando os testes após as dependências estarem resolvidas
-
-      - name: Generate Allure Report
-        run: mvn allure:serve  # Gera o relatório allure
-
-      - name: Upload Allure Report as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-report
-          path: target/site/allure-maven-plugin  # Caminho onde o Allure gera os relatórios
-
-      - name: Upload Allure HTML report
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-html-report
-          path: target/allure-report  # Caminho do relatório Allure em HTML
+        run: mvn test
