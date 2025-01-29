@@ -1,6 +1,3 @@
-
-name: Build and Test Maven Project
-
 on:
   push:
     branches:
@@ -36,3 +33,18 @@ jobs:
 
       - name: Run tests with Maven
         run: mvn test  # Agora rodando os testes após as dependências estarem resolvidas
+
+      - name: Generate Allure Report
+        run: mvn allure:serve  # Gera o relatório allure
+
+      - name: Upload Allure Report as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin  # Caminho onde o Allure gera os relatórios
+
+      - name: Upload Allure HTML report
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-html-report
+          path: target/allure-report  # Caminho do relatório Allure em HTML
